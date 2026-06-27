@@ -1,2 +1,101 @@
-# DocuFlow-
-DocuFlow: Intelligent Document Management &amp; Automation System
+# DocuFlow: Intelligent Document Management & Automation System
+
+![DocuFlow Logo/Banner - Placeholder](https://via.placeholder.com/1200x400?text=DocuFlow+Logo+or+Project+Banner )
+
+## Overview
+
+**DocuFlow** is a robust, enterprise-level document management and workflow automation system developed from December 2024 to February 2026. It's designed to revolutionize how businesses handle documents by integrating advanced Artificial Intelligence for intelligent processing and leveraging `n8n` for powerful, customizable automation workflows. This project showcases a deep understanding of full-stack web development, secure coding practices, and modern integration techniques.
+
+## Features & Highlights
+
+*   **Intelligent Document Processing (AI-Powered):**
+    *   Automated analysis, categorization, and extraction of key information from various document types.
+    *   Integration with AI services for enhanced data insights and decision-making.
+*   **Robust Workflow Automation with n8n:**
+    *   Seamless integration with `n8n` to create complex, event-driven automation flows.
+    *   Automate tasks such as document routing, notifications, data synchronization, and external API calls.
+*   **Secure & Scalable Architecture:**
+    *   Developed with `PHP 8.2 (Vanilla)` focusing on performance and maintainability.
+    *   Implemented critical security measures including CSRF protection, `bcrypt` hashing for passwords, and secure session management.
+    *   Designed for scalability to handle growing document volumes and user bases.
+*   **Advanced User & Access Management:**
+    *   Comprehensive role-based access control (RBAC) system.
+    *   Detailed audit logging for all user activities and document changes.
+*   **API-Driven Design:**
+    *   A well-structured RESTful API enabling flexible integration with third-party applications and services.
+*   **Document Versioning & History:**
+    *   Track changes and maintain a complete history of all document revisions.
+
+## Technologies
+
+*   **Backend:** PHP 8.2 (Vanilla)
+*   **Database:** MySQL 8.0+
+*   **Frontend:** HTML, CSS, JavaScript
+*   **Automation:** n8n
+*   **AI Integration:** Various AI APIs (e.g., for NLP, OCR)
+*   **Security:** `bcrypt`, CSRF Tokens, Secure Sessions
+
+## Security Enhancements & Best Practices (Post-Analysis)
+
+During a comprehensive security audit, several critical areas were identified and addressed to elevate DocuFlow to a truly production-ready standard:
+
+*   **API Token Hashing:** Transitioned from `SHA256` to `password_hash($token, PASSWORD_DEFAULT)` for robust API token security.
+*   **Rate Limiting Implementation:** Introduced rate limiting on authentication endpoints (login/register) to prevent brute-force attacks.
+*   **Environment Variable Management:** Migrated sensitive database credentials and API keys from version control to secure `.env` files, enhancing deployment security.
+*   **Comprehensive Input Sanitization & Validation:** Strengthened all input validation routines to prevent XSS, SQL Injection, and other common web vulnerabilities.
+*   **Content Security Policy (CSP):** Implemented a strict CSP to mitigate cross-site scripting (XSS) and data injection attacks.
+*   **Secure Headers:** Ensured proper HTTP security headers (e.g., `X-Content-Type-Options`, `X-Frame-Options`) are set.
+
+_These proactive security measures demonstrate a commitment to building secure and resilient applications, a critical skill for any modern Web Software Engineer._
+
+## Getting Started
+
+To get a local copy up and running, follow these simple steps.
+
+### Prerequisites
+
+*   PHP 8.2 or higher
+*   MySQL 8.0 or higher
+*   Composer (optional, for dependency management if introduced)
+*   `n8n` instance (local or cloud-hosted) for automation workflows
+
+### Installation
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/E404-code/DocuFlow.git
+    cd DocuFlow
+    ```
+2.  **Configure Environment Variables:**
+    *   Create a `.env` file in the root directory based on `.env.example`.
+    *   Populate with your database credentials, API keys, and other sensitive information.
+    ```bash
+    cp .env.example .env
+    # Edit .env file
+    ```
+3.  **Database Setup:**
+    *   Import the provided `database_schema.sql` into your MySQL server.
+    *   Run any necessary migrations (if applicable ).
+4.  **Web Server Configuration:**
+    *   Configure your web server (Apache/Nginx) to point to the `public` directory.
+5.  **n8n Integration:**
+    *   Import the `n8n_workflows.json` (if provided) into your `n8n` instance.
+    *   Configure webhooks and credentials as per the documentation.
+
+## Contributing
+
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'feat: Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## Contact
+Linkedin : [ www.linkedin.com/in/nser-f-khyal-24439341a ]
+Project Link: [https://github.com/E404-code/DocuFlow](https://github.com/E404-code/DocuFlow )

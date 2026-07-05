@@ -1,0 +1,1265 @@
+{
+  "name": "doc_web_call",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "594697fb-c379-4fd3-8318-6e3019eca500",
+              "name": "token_candidate",
+              "value": "={{ $('Code in JavaScript1').item.json.token_candidate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1168,
+        480
+      ],
+      "id": "d448d457-74f1-4583-b6d0-340c5c3b2345",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "R84jrnqLQGSnTDyA",
+          "mode": "list",
+          "cachedResultName": "users_crid",
+          "cachedResultUrl": "/projects/twl8hy6FgiQOrv3D/datatables/R84jrnqLQGSnTDyA"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $json.id }}"
+            },
+            {
+              "keyName": "token",
+              "keyValue": "={{ $json.token }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "sessionId": "={{ $json.sessionId }}",
+            "token": "={{ $json.token }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "sessionId",
+              "displayName": "sessionId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "token",
+              "displayName": "token",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "formId",
+              "displayName": "formId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        912,
+        624
+      ],
+      "id": "78306f9b-6e4a-4b6a-aa9c-6865914db82f",
+      "name": "Update row(s)"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "R84jrnqLQGSnTDyA",
+          "mode": "list",
+          "cachedResultName": "users_crid",
+          "cachedResultUrl": "/projects/twl8hy6FgiQOrv3D/datatables/R84jrnqLQGSnTDyA"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "sessionId": "={{ $('If2').item.json.sessionId }}",
+            "token": "={{ $('If2').item.json.token_candidate }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "sessionId",
+              "displayName": "sessionId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "token",
+              "displayName": "token",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        896,
+        416
+      ],
+      "id": "fa1a636c-ec32-4c38-98cc-caab3205fd77",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6cfc67e6-698b-4ce5-8629-15831bfcec5e",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        688,
+        496
+      ],
+      "id": "a35d1c87-6962-488e-9a63-b3b67ec38c8e",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b80990ac-2f3a-4688-87a5-b058c60277da",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        304
+      ],
+      "id": "aa146ca9-e2ea-4fe9-90bd-71353159eb9d",
+      "name": "If3",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const $json = $('If').first().json\nconst text = ($json.message || $json.chatInput || '').toString().trim();\n\n// يبحث عن توكن بطول 64 حرف سداسي\nconst match = text.match(/\\b[a-fA-F0-9]{64}\\b/);\n\nreturn [\n  {\n    json: {\n      ...$json,\n      token_candidate: match ? match[0] : null\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        592
+      ],
+      "id": "666103e8-41b8-4cc2-a506-2f12d14f313b",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6a926cd9-4c28-406e-999d-97ee2517a0f6",
+              "leftValue": "={{ $json.token_candidate }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        288,
+        592
+      ],
+      "id": "5964ec86-ead5-4513-ad0a-0875a3634ee6",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "14487d10-3d12-4266-b481-06e4c8823608",
+              "name": "sessionId",
+              "value": "={{ $json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "2133b028-e5cc-4944-a978-a484e804a1e6",
+              "name": "action",
+              "value": "={{ $json.action }}",
+              "type": "string"
+            },
+            {
+              "id": "7a971e4e-2d0a-4aae-a9bc-517428efaecc",
+              "name": "chatInput",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1072,
+        976
+      ],
+      "id": "22ac78bd-8afd-478e-a081-f623d24dd5f2",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        960,
+        816
+      ],
+      "id": "76d9f5c2-a401-45f3-8ebb-0768b83ca513",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "model": "arcee-ai/trinity-large-preview:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        544,
+        944
+      ],
+      "id": "8516eaf4-329d-4491-8829-5a18eec72f22",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "UsBFG5Eebw1nqOiZ",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "أنت مساعد لنظام إدارة المستندات والموظفين باسم DocuFlow.\nحدودك واضحة: لا تجيب عن أي شيء خارج إدارة المستندات وخدمة AI Chat.\nهدفك الآن: إعطاء إجابات قصيرة وواضحة حول تفعيل الخدمة وإرسال التوكن.\n\nالقواعد:\n- رد دائمًا بنفس لغة المستخدم.\n- إذا كان الرد خطوات أو شرحًا، اكتبه كنقاط مرتبة.\n- كن ودودًا ومباشرًا، واشكر المستخدم في النهاية.\n- لا تعطِ إجابات عامة طويلة، أجب بشكل محدد على سؤال المستخدم.\n- في كل رد اطلب التوكن لأن الوصول للخدمة يتطلبه.\n\nمعلومات تفعيل الخدمة (استخدمها عند السؤال):\n- يجب أن يكون للمستخدم حساب أو اشتراك في DocuFlow.\n- إذا لم يكن لديه حساب، يتواصل معنا أو يطلب من مديره إنشاء حساب له.\n- بعد إنشاء الحساب، يُنصح بتغيير كلمة المرور والبريد الإلكتروني.\n- عند إنشاء الحساب، تصل رسالة بريد تحتوي توكن (مثل: 41115f1b0244471892c88c2165d65a7b).\n- التوكن سري ويجب حفظه في مكان آمن. أي تسريب يسمح بالوصول لمستنداته.\n- لإتمام التفعيل: يدخل المستخدم صفحة AI Chat في المنصة ويرسل التوكن كما هو.\n- مستخدمو Telegram: يبحثون عن بوت DocuFlowAI أو DocuFlowAssistant، يرسلون Start ثم التوكن.\n- WhatsApp وخدمات أخرى: غير متوفرة حاليًا.\n\nحل مشاكل التوكن:\n- يمكن إعادة توليد التوكن من صفحة الملف الشخصي.\n- التوكن الجديد يُرسل إلى البريد.\n- يُنصح بفحص البريد غير الهام (Spam).\n- إذا استمرت المشكلة، يتواصل معنا.\n\nهذه هي حدودك فقط. لا تجب عن أي أسئلة عامة خارج هذا النطاق.\n\n\n\nامثله لردودك المحتمله نماذج يفضل استخدامها اذا كانت تجيب علي السياق\n\n- يجب أن يكون لديك حساب في DocuFlow.\n- إذا لا تملك حسابًا: تواصل معنا أو اطلب من مديرك إنشاء حساب.\n- عند إنشاء الحساب سيصلك توكن عبر البريد.\n- أرسل التوكن هنا لتفعيل الخدمة.\nوشكرًا لك.\n\n\n- مرحبًا بك في DocuFlow.\n- للوصول للخدمة أرسل التوكن الخاص بك.\n- إذا لا تملك توكن: ادخل حسابك → الملف الشخصي → إعادة توليد توكن وسيصل للبريد.\n- يرجى إرسال التوكن الآن.\nوشكرًا لك.\n\n- افتح تطبيق Telegram.\n- ابحث عن البوت: DocuFlowAI أو DocuFlowAssistant.\n- أرسل Start ثم أرسل التوكن.\n- سيتم التفعيل فورًا.\nوشكرًا لك.\n\n- ادخل حسابك في DocuFlow.\n- الملف الشخصي → إعادة توليد توكن.\n- افحص البريد غير الهام (Spam).\n- إذا استمرت المشكلة تواصل معنا.\nوشكرًا لك.\n\n\n- عذرًا، لا أستطيع المساعدة خارج نطاق إدارة المستندات.\n- يمكنني مساعدتك في: التوكن، البحث، الحذف، التعديل، الإنشاء.\n- أرسل التوكن للبدء.\nوشكرًا لك.\n\n- التوكن غير صحيح.\n- أعد إرساله كما هو بدون تعديل.\n- إذا لا تملك توكن: ادخل حسابك وأعد توليده.\nوشكرًا لك.\n\n\n- تم التحقق من التوكن بنجاح.\n- يمكنك الآن إرسال طلبات البحث أو التعديل أو الحذف.\nوشكرًا لك.\n\n\n- خدمة WhatsApp غير متوفرة حاليًا.\n- سنوفرها قريبًا.\n- أرسل التوكن هنا لتفعيل الخدمة.\nوشكرًا لك.\n\n\n\n\n\n\n\n\n\n\n"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        544,
+        736
+      ],
+      "id": "1191f75c-1282-4575-a449-00a06048b145",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -144,
+        688
+      ],
+      "id": "c0db7876-2888-4503-9709-2964e1af21a8",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9fa27549-e9c2-4724-8fa5-ef3d7472fffb",
+              "name": "chatInput",
+              "value": "طلب خاطئ حاول مجددا",
+              "type": "string"
+            },
+            {
+              "id": "10655f2d-c480-4cd6-826e-b1c308b0e434",
+              "name": "sessionId",
+              "value": "={{ $json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "313f5e3f-192e-4212-9540-fbcd40534447",
+              "name": "action",
+              "value": "={{ $json.action }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -336,
+        688
+      ],
+      "id": "70a55215-8e43-4b60-80e5-f11ae8c6c1b0",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fdae6415-edd8-46f6-81cc-efaf32d555c7",
+              "name": "chatInput",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            },
+            {
+              "id": "8956b13a-a570-426a-9456-e03574c39760",
+              "name": "sessionId",
+              "value": "={{ $json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "41f856dd-d9a5-462d-9752-cb18d0566395",
+              "name": "action",
+              "value": "={{ $json.action }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        832
+      ],
+      "id": "c128223d-bff1-4c65-8d11-2ada64499543",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "R84jrnqLQGSnTDyA",
+          "mode": "list",
+          "cachedResultName": "users_crid",
+          "cachedResultUrl": "/projects/twl8hy6FgiQOrv3D/datatables/R84jrnqLQGSnTDyA"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "sessionId",
+              "keyValue": "={{ $json.sessionId }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -208,
+        304
+      ],
+      "id": "7cd63ace-7d82-4270-8a15-3d503992908a",
+      "name": "Get row(s)",
+      "retryOnFail": false,
+      "notesInFlow": false,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f1523d17-3ca5-428f-9180-ce71971116d2",
+              "leftValue": "={{ $json.sessionId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "16321ad3-8458-4167-8e52-053b48d6a774",
+              "leftValue": "={{ $json.action }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "ee38c104-85fa-41a4-a994-145d981b48d8",
+              "leftValue": "={{ $json.chatInput }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -448,
+        320
+      ],
+      "id": "fa841441-3830-4867-906a-a9c9e8fcfb19",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $json.body ?? $json;\nconst item = Array.isArray(body) ? body[0] : body;\n\nconst sessionId = item.sessionId ?? '';\nconst chatInput = (item.chatInput ?? '').toString().trim();\nconst action = item.action ?? 'sendMessage';\n\nreturn [\n  {\n    json: {\n      sessionId,\n      action,\n      chatInput\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -656,
+        320
+      ],
+      "id": "31c0bad8-799c-47cc-a6ac-b82e3ea5fa86",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseCode": 200,
+          "enableStreaming": true
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        864,
+        992
+      ],
+      "id": "3910386d-11ef-48ba-a4d7-f5eb5cfd99c6",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "documentio-onchat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -864,
+        320
+      ],
+      "id": "235387d9-4cc2-46a9-ab14-0ea8287a78ad",
+      "name": "Webhook",
+      "webhookId": "eba81325-67bf-41de-80bc-fbd4b5d349fa"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ea9eccf8-8a8c-491c-af9c-08b4e8e56b7f",
+              "name": "sessionId",
+              "value": "={{ $json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "e51213fb-a843-4c78-8af8-e0e459702b81",
+              "name": "token",
+              "value": "={{ $json.token }}",
+              "type": "string"
+            },
+            {
+              "id": "a9a035ac-542f-46e1-bf89-4c17861122e2",
+              "name": "action",
+              "value": "={{ $('If').item.json.action }}",
+              "type": "string"
+            },
+            {
+              "id": "90d0b623-8823-47a3-92c6-9d7fbfe80026",
+              "name": "chatInput",
+              "value": "={{ $('If').item.json.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        208
+      ],
+      "id": "89763473-c2d8-4e2d-bd2c-ebf29fbb70c7",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://dev-account-100.app.n8n.cloud/webhook/prossFlow",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=sessionId",
+              "value": "={{ $json.sessionId }}"
+            },
+            {
+              "name": "=token",
+              "value": "={{ $json.token }}"
+            },
+            {
+              "name": "=action",
+              "value": "={{ $json.action }}"
+            },
+            {
+              "name": "=message",
+              "value": "={{ $json.chatInput }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        416,
+        208
+      ],
+      "id": "9a0aff71-221d-4347-ba6d-9e8418ff52ee",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        832,
+        208
+      ],
+      "id": "bf8fad24-c3ec-4527-9331-84717c0a8e28",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "854abf42-a354-47b5-a41a-547874d89226",
+              "name": "sessionId",
+              "value": "={{ $('Edit Fields3').item.json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "c5e8b98b-60c8-4190-8aab-812a4178a844",
+              "name": "action",
+              "value": "={{ $('Edit Fields3').item.json.action }}",
+              "type": "string"
+            },
+            {
+              "id": "7dd5cb32-e9e1-4dd6-9c84-ebf7adcf4a8d",
+              "name": "chatInput",
+              "value": "={{ $json.chatInput}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        208
+      ],
+      "id": "0607f61c-4f85-4918-be90-77a4872c8155",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "R84jrnqLQGSnTDyA",
+          "mode": "list",
+          "cachedResultName": "users_crid",
+          "cachedResultUrl": "/projects/twl8hy6FgiQOrv3D/datatables/R84jrnqLQGSnTDyA"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "token",
+              "keyValue": "={{ $json.token_candidate }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        464,
+        560
+      ],
+      "id": "7a76b4fb-b490-4351-9145-768efd93a713",
+      "name": "Get row(s)1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://187.77.75.211/doc/api/validate-token.php",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Api-Token",
+              "value": "={{ $json.token_candidate }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1376,
+        480
+      ],
+      "id": "00a5a4f4-fd06-40ce-a569-ab3da8183bdf",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.data.status }}",
+                    "rightValue": "error",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "063a4b41-f6d5-4e97-b95f-9c09a5caf7af"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "error res"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "6f0fbf5a-faa2-4aae-bc70-cd325b90c68a",
+                    "leftValue": "={{ $json.data.status }}",
+                    "rightValue": "success",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "success res"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1792,
+        480
+      ],
+      "id": "a11b0198-51b2-4e15-a113-5a203f5f9ce8",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  // مثال: item.json.data = \"{\\\"status\\\":\\\"error\\\",\\\"message\\\":\\\"Unauthorized access\\\"}\"\n  const raw = item.json.data;\n\n  if (typeof raw === 'string') {\n    try {\n      item.json.data = JSON.parse(raw); // تتحول إلى object\n    } catch (e) {\n        item.json.data_parse_error =  e.message;\n    }\n  }\n\n  return item;\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1584,
+        480
+      ],
+      "id": "4f45a8e8-7772-4342-ae22-e4f64f4b8fbc",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseCode": 200,
+          "enableStreaming": true
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2288,
+        496
+      ],
+      "id": "d7ad6ae8-b7e5-4d92-bc92-b102d399fbfd",
+      "name": "Respond to Webhook3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5fb75a48-e810-4634-bb0b-f76763ceb3c8",
+              "name": "sessionId",
+              "value": "={{ $('If2').item.json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "d7d0bbce-5d1e-4ad3-9b6a-776b946b88a2",
+              "name": "action",
+              "value": "={{ $('If2').item.json.action }}",
+              "type": "string"
+            },
+            {
+              "id": "e73c320c-d37d-49b8-b75a-ca4597011449",
+              "name": "chatInput",
+              "value": "=توكن غير صالح يرجي المحاولة بتوكن صحيح",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2000,
+        384
+      ],
+      "id": "ecd1977a-5611-4b95-b0e9-dda6be3cd4d9",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1c8227f8-cea8-4e6d-a61f-d32ad1204b87",
+              "name": "sessionId",
+              "value": "={{ $('If2').item.json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "e0c5ffda-3d4f-4362-861d-71d0c9f0636b",
+              "name": "action",
+              "value": "={{ $('If2').item.json.action }}",
+              "type": "string"
+            },
+            {
+              "id": "a76cf5f8-ef75-4bf5-856b-53f1606b1760",
+              "name": "chatInput",
+              "value": "=تم التحقق من التوكن بنجاح الان يمكنك الاستمتاح بالخدمة",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2000,
+        576
+      ],
+      "id": "30320277-7d2c-4ba7-a7c5-44f70746bddd",
+      "name": "Edit Fields7"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Update row(s)": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)1": {
+      "main": [
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "f2c281b6-723c-4831-815f-7e08d6c7b1d7",
+  "meta": {
+    "instanceId": "68ea6fa7f9551640ad2986f8c36c871843b63aa50b4f17447e6fdb8712ecab3c"
+  },
+  "id": "k8nB1E7dmJNuzMnv",
+  "tags": []
+}

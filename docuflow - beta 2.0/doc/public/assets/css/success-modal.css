@@ -1,0 +1,48 @@
+.success-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--bg-overlay);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modalbox {
+    margin-bottom: -50px;
+    width: 100px;
+    height: 100px;
+    background-color: var(--bg-card);
+    border-radius: 10px;
+    box-shadow: var(--shadow-md);
+}
+
+.cricle,
+.progress {
+    fill: transparent;
+    stroke: #8080804c;
+    stroke-width: 3px;
+}
+
+.progress {
+    stroke: var( --info-base);
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke-dasharray: 280;
+    stroke-dashoffset: 280;
+}
+
+.check {
+    stroke-width: 4px;
+    stroke: var( --info-base);;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+}
+
+@keyframes spin {
+    to {
+        stroke-dashoffset: 0;
+    }
+}

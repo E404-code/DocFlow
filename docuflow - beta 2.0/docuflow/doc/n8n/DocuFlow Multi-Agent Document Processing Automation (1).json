@@ -1,0 +1,1966 @@
+{
+  "name": "DocuFlow Multi-Agent Document Processing Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "prossFlow",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "837ff950-905e-477e-89db-843ed06f6054",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        256,
+        880
+      ],
+      "webhookId": "460c0c68-dfed-4e82-89e1-6cfa074bc902"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "sessionId",
+              "value": "={{ $json.body.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "token",
+              "value": "={{ $json.body.token }}",
+              "type": "string"
+            },
+            {
+              "id": "id-4",
+              "name": "attachments",
+              "value": "=[]",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9bd7d404-4b29-4fa3-8929-f53335633af1",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e7113b26-3636-447e-a170-94a27cdd1d66",
+              "leftValue": "={{ $json.token }}",
+              "operator": {
+                "type": "string",
+                "operation": "exists"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "fe1f255a-170e-4e44-8b49-d832659bab4e",
+      "name": "Check Token",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        704,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "sessionId",
+              "value": "={{ $json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "action",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "chatInput",
+              "value": "Authentication token is required",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c49f239b-ead8-4e60-be96-d0bd9f30a421",
+      "name": "Error Response - No Token",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3344,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6f1cc690-89ce-4371-ba9f-453e2bd988c7",
+              "leftValue": "={{ $json.attachments }}",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6652c14b-5553-4cc5-aadf-be82eeb62dbd",
+      "name": "Check for Attachments",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        928,
+        1232
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "d1bee56e-757a-4a24-bcfb-e5304e5d1d36",
+      "name": "OpenAI Chat Model - Intent Agent",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1024,
+        1408
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "q7wkzGVa79nyrWzl",
+          "name": "n8n free OpenAI API credits"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\"type\": \"object\", \"properties\": {\"intent\": {\"type\": \"string\", \"description\": \"User intent: general_question | search | create | update | bulk_intake | report | out_of_scope\"}, \"filters\": {\"type\": \"object\", \"description\": \"Extracted search filters (date ranges, field values, etc)\"}, \"fields\": {\"type\": \"object\", \"description\": \"Fields to create/update with values\"}, \"columns\": {\"type\": \"array\", \"description\": \"Columns requested for report generation\"}, \"reasoning\": {\"type\": \"string\", \"description\": \"Explanation of intent classification\"}}, \"required\": [\"intent\", \"reasoning\"]}"
+      },
+      "id": "5c46c650-657f-4e56-abe4-3b01092838fa",
+      "name": "Intent Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1296,
+        1456
+      ]
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=={{ $('Webhook').first().json.body.sessionId }}",
+        "contextWindowLength": 10
+      },
+      "id": "4ea39e1f-5bda-417b-a30f-329793b53dd5",
+      "name": "Conversation Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1344,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are the Intent & Parsing Agent for DocuFlow - a document management system. Your role is to analyze user messages and classify their intent.\n\nYou receive requests in two scenarios:\n1. WITH OCR results: User uploaded attachments that were processed - extracted text is available\n2. WITHOUT attachments: User message only - analyze directly\n\nAvailable intents:\n- general_question: Questions about DocuFlow features, how to use the system\n- search: Looking for existing documents (e.g., 'find my passport', 'show certificates from 2020')\n- create: Adding new documents (with or without OCR data)\n- update: Modifying existing document fields\n- bulk_intake: Multiple images to process\n- report: Generate Excel/Word reports with specific columns and filters\n- out_of_scope: Requests unrelated to document management\n\nFor search/report: extract filters (dates, field values, document types) and columns\nFor create/update: extract field names and values\nFor bulk_intake: determine if images should be merged or separate\n\nContext available: When OCR results are present, you'll receive extracted text from processed documents. Otherwise, analyze the user's direct message.\n\nAlways provide clear reasoning for your classification."
+        }
+      },
+      "id": "01625c77-83d3-4342-9c7b-79115ec0ca39",
+      "name": "Intent Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1152,
+        1280
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.intent }}",
+                    "rightValue": "general_question",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "dbb402f0-6ed6-48e4-8874-f22977f688fd"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "general_question"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.intent }}",
+                    "rightValue": "search",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "2e19bf47-964f-48c8-a6a5-4733b8a2c277"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "search"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.intent }}",
+                    "rightValue": "create",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "7b587c31-8c3c-49fe-a7ec-809b9f3c71e1"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "create"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.intent }}",
+                    "rightValue": "update",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "1110bb68-b9b2-4611-9bd6-a14a985644bd"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "update"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.intent }}",
+                    "rightValue": "bulk_intake",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "91153001-b410-4d29-b78f-6aea616d3bec"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "bulk_intake"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.intent }}",
+                    "rightValue": "report",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "ad6258de-e391-4250-928d-e028032a20e7"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "report"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.intent }}",
+                    "rightValue": "out_of_scope",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "7926e970-0c64-42d6-8796-5b14c00a8f65"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "out_of_scope"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7bc56cf6-a6a6-4194-b460-4df18bed0646",
+      "name": "Route by Intent",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1504,
+        1152
+      ]
+    },
+    {
+      "parameters": {
+        "toolDescription": "Extracts text and structured data from document images (passports, birth certificates, IDs, invoices). Use when user uploads images that need OCR processing. Returns extracted text, structured fields, and document type.",
+        "text": "=Extract all text and structured information from the provided document image.\n\nDocument image: ={{ $fromAI('imageUrl', 'URL or base64 of the document image to process', 'string') }}\n\nAnalyze the image and extract:\n1. All visible text (raw OCR)\n2. Structured fields based on document type (names, dates, ID numbers, addresses, etc)\n3. Document type classification\n4. Confidence score for extraction quality\n5. Whether manual review is recommended\n\nReturn structured JSON with all extracted information.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "id": "4dbe68fd-d079-426f-a8ca-0829932f84ac",
+      "name": "OCR Tool",
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        1984,
+        896
+      ]
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\"type\": \"object\", \"properties\": {\"extractedText\": {\"type\": \"string\", \"description\": \"Raw text extracted from the document image\"}, \"structuredData\": {\"type\": \"object\", \"description\": \"Structured fields extracted (name, date, ID number, etc)\"}, \"documentType\": {\"type\": \"string\", \"description\": \"Type of document detected (passport, birth_certificate, id_card, invoice, etc)\"}, \"confidence\": {\"type\": \"number\", \"description\": \"Confidence score 0-1 for extraction quality\"}, \"requiresReview\": {\"type\": \"boolean\", \"description\": \"Whether manual review is recommended\"}}, \"required\": [\"extractedText\", \"documentType\", \"confidence\"]}"
+      },
+      "id": "0f171aec-a897-46ef-bdad-9a34fb454c9f",
+      "name": "OCR Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2160,
+        1104
+      ]
+    },
+    {
+      "parameters": {
+        "toolDescription": "Searches DocuFlow backend for documents matching filters (date ranges, field values, document types). Returns matching documents with their metadata and field values.\nlike :\ncustomer_name   LIKE ?\n            OR national_number LIKE ?\n            OR phone           LIKE ?\n            OR passport        LIKE ?\n            OR contact         LIKE ?\n            OR status          LIKE ?\n            OR iban            LIKE ?\n            OR notes           LIKE ?\n            OR created_at      LIKE ?\nif user need search by name example\njohn -> name\nsearch about \"john\"\nor 2026-?-? -> data\nor 01:??:?? -> time\nor any key above user need",
+        "method": "POST",
+        "url": "=http://187.77.75.211/doc/api/document_search.php",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Normalize Input').item.json.token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Api-Token",
+              "value": "={{ $('Normalize Input').item.json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `update this value by user value need to search like data time name number`, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "70f56390-6696-4132-91e4-40205b225589",
+      "name": "Search API Tool",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        2272,
+        896
+      ]
+    },
+    {
+      "parameters": {
+        "toolDescription": "Creates a new document in DocuFlow with specified field values. Use after OCR extraction or when user provides document data directly.\nRequired fields for create\n- customerName\n- nationalNumber\n- phone\n- passport\n- contact\n- Price\n\nOptional fields:\n- status\n- ibm (IBAN)\n- notes\n- passport_Image\n- nn_Image",
+        "method": "POST",
+        "url": "=http://187.77.75.211/doc/api/uploads_document.php",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Normalize Input').item.json.token }}"
+            },
+            {
+              "name": "X-Api-Token",
+              "value": "={{ $('Normalize Input').item.json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "customerName",
+              "value": "={{ $fromAI('customerName', 'Customer name field of document, e.g. John Don', 'string') }}"
+            },
+            {
+              "name": "nationalNumber",
+              "value": "={{ $fromAI('nationalNumber', 'National number field - 12 digits starting with 1200, 2200, 1199, or 1198, e.g. 220022000000', 'string') }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ $fromAI('phone', 'Phone number field - 10 digits starting with 09 without +, e.g. 0900000000', 'string') }}"
+            },
+            {
+              "name": "passport",
+              "value": "={{ $fromAI('passport', 'Passport field - 8 characters including English letters and numbers, e.g. AC101066', 'string') }}"
+            },
+            {
+              "name": "contact",
+              "value": "={{ $fromAI('contact', 'Contact field - accepts name, phone number, or email, e.g. sara ali | 0900000000 | m.ahmed@example.com', 'string') }}"
+            },
+            {
+              "name": "Price",
+              "value": "={{ $fromAI('price', 'Price field', 'string') }}"
+            },
+            {
+              "name": "ibm",
+              "value": "={{ $fromAI('iban', 'IBAN - Optional alphanumeric bank account number (approx. 16 characters; length may vary)', 'string') }}"
+            },
+            {
+              "name": "notes",
+              "value": "={{ $fromAI('notes', 'Note - Optional short text provided by the customer', 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "554ef014-ad94-4231-9524-27d470a1c8ce",
+      "name": "Create Document API Tool",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        2400,
+        896
+      ]
+    },
+    {
+      "parameters": {
+        "toolDescription": "Deletes a document from DocuFlow by id. Use with caution - this action cannot be undone.",
+        "method": "POST",
+        "url": "=http://187.77.75.211/doc/api/document_delete.php",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Normalize Input').item.json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "={{ $fromAI('document_id', 'The unique ID of the document to delete', 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c0c8d192-9d00-44e6-af63-fa1b3c56ea40",
+      "name": "Delete Document API Tool",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        2656,
+        896
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Generates Excel or Word reports from DocuFlow documents with specified columns and filters. Returns downloadable file URL.",
+        "jsCode": "const reportConfig = typeof query === 'string' ? JSON.parse(query) : query;\n\n// Simulate report generation\nconst reportResult = {\n  reportId: 'RPT-' + Date.now(),\n  format: reportConfig.format || 'excel',\n  columns: reportConfig.columns || [],\n  filters: reportConfig.filters || {},\n  rowCount: Math.floor(Math.random() * 100) + 10,\n  fileUrl: 'https://api.docuflow.example.com/reports/download/' + Date.now() + '.' + (reportConfig.format === 'word' ? 'docx' : 'xlsx'),\n  generatedAt: new Date().toISOString(),\n  status: 'completed'\n};\n\nreturn JSON.stringify(reportResult, null, 2);"
+      },
+      "id": "edc6bed2-d6ed-4fae-840d-3baca5b7208a",
+      "name": "Report Generator Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.3,
+      "position": [
+        2784,
+        896
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "299f794a-1567-4dda-9617-5198c54a0f4c",
+      "name": "OpenAI Chat Model - Execution Agent",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1728,
+        896
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "q7wkzGVa79nyrWzl",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ 'User request: ' + \n$('Check for Attachments').first().json.message\n+ '\\n\\nIntent analysis: ' + JSON.stringify($json) }}",
+        "options": {
+          "systemMessage": "You are the Execution Agent for DocuFlow. Your role is to orchestrate tool calls to fulfill user requests.\n\nAvailable tools:\n- OCR Document Extractor: Process document images to extract text and structured data\n- Search Documents API: Find documents matching filters\n- Create Document API: Add new documents to the system\n- Update Document API: Modify existing document fields\n- Delete Document API: Remove documents (use with caution)\n- Generate Report: Create Excel/Word reports with specified columns\n\nWorkflow patterns:\n\n1. CREATE with image:\n   - Call OCR Document Extractor with image URL\n   - Call Create Document API with extracted data\n   - Confirm creation\n\n2. SEARCH:\n   - Call Search Documents API with filters from intent\n   - Return matching documents\n\n3. UPDATE:\n   - If document ID not provided, search first\n   - Call Update Document API with document ID and new field values\n   - Confirm update\n\n4. BULK INTAKE:\n   - Process each image with OCR\n   - Determine if images should be merged (related pages) or separate documents\n   - Create document(s) accordingly\n\n5. REPORT:\n   - Call Search Documents API with filters\n   - Call Generate Report with results and requested columns\n   - Return download URL\n\nAlways confirm actions and provide clear status updates."
+        }
+      },
+      "id": "9514e49f-9726-489a-be7c-88f43a9814ae",
+      "name": "Execution Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2272,
+        672
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "815c98b1-16bc-4d55-aa60-125469b691ea",
+      "name": "OpenAI Chat Model - Response Agent",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2992,
+        1488
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "q7wkzGVa79nyrWzl",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\"type\": \"object\", \"properties\": {\"response\": {\"type\": \"string\", \"description\": \"Natural language response to the user\"}, \"action\": {\"type\": \"string\", \"description\": \"Action taken: completed | pending | error | info\"}, \"details\": {\"type\": \"object\", \"description\": \"Additional details like document IDs, file URLs, counts\"}}, \"required\": [\"response\", \"action\"]}"
+      },
+      "id": "49ad228b-03e8-4f1b-b7c1-b930262a5194",
+      "name": "Response Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        3136,
+        1456
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ 'Execution result: ' + JSON.stringify($json) }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are the Response Agent for DocuFlow. Your role is to format execution results into natural, user-friendly responses.\n\nGuidelines:\n- Be concise and clear\n- Confirm what was done (created, updated, found, deleted)\n- Include relevant details (document IDs, counts, file URLs)\n- For errors, explain what went wrong and suggest next steps\n- For reports, provide the download link prominently\n- For searches, summarize results (e.g., 'Found 5 passports from 2020-2023')\n- Use friendly, professional tone\n\nAction types:\n- completed: Successfully finished the request\n- pending: Action initiated but requires follow-up\n- error: Something went wrong\n- info: Providing information or help\n\nFormat your response as natural conversation, not technical output."
+        }
+      },
+      "id": "d91f5142-636a-4cf9-92a3-ff97f0206491",
+      "name": "Response Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2992,
+        1232
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "sessionId",
+              "value": "={{ $('Normalize Input').item.json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "action",
+              "value": "={{ $json.action || 'completed' }}",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "chatInput",
+              "value": "={{ $json.output.response }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c9dcf8dd-d1c0-4d3d-bea6-b1aae2a397dd",
+      "name": "Format Final Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3344,
+        1232
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "id": "b641a7fb-95ca-4850-bbe2-71b5d332deda",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3584,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "22f312d7-780e-4f1f-9947-2fadcaa1661a",
+      "name": "OpenAI Chat Model - General QA",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2176,
+        1712
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "q7wkzGVa79nyrWzl",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Normalize Input').item.json.message }}",
+        "options": {
+          "systemMessage": "You are the General Q&A Agent for DocuFlow - a document management system.\n\nYour role is to answer questions about:\n- How to use DocuFlow features\n- What types of documents can be stored\n- How to search, create, update, or delete documents\n- How to generate reports\n- System capabilities and limitations\n\nDocuFlow capabilities:\n- Store and manage documents (passports, birth certificates, IDs, invoices, etc)\n- OCR processing for document images\n- Search with filters (date ranges, field values, document types)\n- Create, update, and delete documents\n- Generate Excel and Word reports\n- Multi-image bulk intake (merge related pages or create separate documents)\n- Conversation memory for follow-up questions\n\nBe helpful, concise, and friendly. If the question is about performing an action (not just asking how), suggest they rephrase as a command (e.g., 'create a passport record' instead of 'how do I create a passport record')."
+        }
+      },
+      "id": "7a185bf7-35b7-4744-b55f-b0f163067c47",
+      "name": "General QA Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2192,
+        1488
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "id": "0b4677a0-a8e8-47d3-bf36-f1b7308f8e65",
+      "name": "Extract Text from Documents",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        4528,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o"
+        },
+        "text": "Extract all text and structured information from this document image. Identify document type (passport, birth certificate, ID card, invoice, etc), extract all visible text, and identify key fields like names, dates, ID numbers, addresses, amounts, etc. Return as detailed JSON.",
+        "imageUrls": "={{ $json.url }}",
+        "options": {}
+      },
+      "id": "565532d3-bf2b-480a-978a-e362e4b7ba27",
+      "name": "OpenAI Vision OCR",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        4320,
+        496
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "q7wkzGVa79nyrWzl",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.mimeType }}",
+                    "rightValue": "image/",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Images"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.mimeType }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDFs"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.mimeType }}",
+                    "rightValue": "application/",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Other"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "895750cf-2711-4abf-ba66-d47f4df99866",
+      "name": "Route by File Type",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        4080,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "attachments",
+        "options": {}
+      },
+      "id": "edfcd749-1171-46ce-8170-d73cc813700c",
+      "name": "Split Attachments",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        3856,
+        496
+      ]
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "id": "33a133fd-98aa-4ae6-b4fd-f57290bd324a",
+      "name": "Merge Processed Files",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4752,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "extractedText",
+              "value": "={{ $json.message?.content?.[0]?.text || $json.text || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "documentType",
+              "value": "={{ $json.documentType || 'unknown' }}",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "confidence",
+              "value": 0.85,
+              "type": "number"
+            },
+            {
+              "id": "id-4",
+              "name": "originalAttachment",
+              "value": "={{ JSON.stringify($('Split Attachments').item.json) }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0425d981-6a15-4203-96f3-2f50d739aecd",
+      "name": "Prepare OCR Results",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4528,
+        496
+      ]
+    },
+    {
+      "parameters": {
+        "errorMessage": "Unsupported file type. Please upload images (JPG, PNG) or PDF documents."
+      },
+      "id": "517f5a41-0e1c-44db-ae6a-13abc0269571",
+      "name": "Error - Unsupported File Type",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        5040,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "sessionId",
+              "value": "={{ $('Normalize Input').item.json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "action",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "chatInput",
+              "value": "I can only help with document management tasks. Please ask about searching, creating, updating documents, or generating reports.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e586d948-6993-4fb8-8c42-689f3b09771b",
+      "name": "Error Response - Out of Scope",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5040,
+        752
+      ]
+    },
+    {
+      "parameters": {
+        "toolDescription": "Updates existing document fields in DocuFlow. Requires document id and fields to update.",
+        "method": "POST",
+        "url": "=http://187.77.75.211/doc/api/documents_update.php",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Normalize Input').item.json.token }}"
+            },
+            {
+              "name": "X-Api-Token",
+              "value": "={{ $('Normalize Input').item.json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "customerName",
+              "value": "={{ $fromAI('customerName', 'Customer name field of document, e.g. John Don', 'string') }}"
+            },
+            {
+              "name": "nationalNumber",
+              "value": "={{ $fromAI('nationalNumber', 'National number field - 12 digits starting with 1200, 2200, 1199, or 1198, e.g. 220022000000', 'string') }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ $fromAI('phone', 'Phone number field - 10 digits starting with 09 (no + prefix), e.g. 0900000000', 'string') }}"
+            },
+            {
+              "name": "passport",
+              "value": "={{ $fromAI('passport', 'Passport field - 8 characters including English letters and numbers, e.g. AC101066', 'string') }}"
+            },
+            {
+              "name": "contact",
+              "value": "={{ $fromAI('contact', 'Contact field - accepts name, phone number, or email, e.g. sara ali | 0900000000 | m.ahmed@example.com', 'string') }}"
+            },
+            {
+              "name": "Price",
+              "value": "={{ $fromAI('price', 'Price field', 'string') }}"
+            },
+            {
+              "name": "ibm",
+              "value": "={{ $fromAI('iban', 'IBAN - Optional alphanumeric bank account number (approx. 16 characters)', 'string') }}"
+            },
+            {
+              "name": "notes",
+              "value": "={{ $fromAI('notes', 'Notes - Optional short text provided by the customer', 'string') }}"
+            },
+            {
+              "name": "id",
+              "value": "={{ $fromAI('documentId', 'Document ID to update (required)', 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2f175bc1-50c7-4bbe-9395-e1bfb072180f",
+      "name": "Update Document API Tool",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        2528,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Normalize Input').item.json.message }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are the Message Understanding Agent for DocuFlow. Your role is to analyze the user's message when they send attachments to determine their actual intent.\n\nYour task:\n1. Read the user's message carefully\n2. Determine if they actually want to process the attached documents OR if they want something else\n3. Check if the attachments were sent by mistake\n4. Understand what the user is asking for\n\nScenarios:\n- User sends image + message 'extract data from this passport' → SHOULD process attachments\n- User sends image + message 'I sent this by mistake, I want to search for documents' → SHOULD NOT process attachments\n- User sends image + message 'create a report' → SHOULD NOT process attachments (they want report generation, not OCR)\n- User sends image + message 'add this document' → SHOULD process attachments\n- User sends multiple images + message 'process these' → SHOULD process attachments\n\nReturn your analysis with:\n- shouldProcessAttachments: boolean (true if attachments should be processed)\n- reasoning: explanation of your decision\n- userIntent: what the user actually wants"
+        }
+      },
+      "id": "a5e7dd6a-6a8d-4739-beb1-fa7aab58dbca",
+      "name": "Message Understanding Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        4000,
+        -96
+      ]
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\"type\": \"object\", \"properties\": {\"shouldProcessAttachments\": {\"type\": \"boolean\", \"description\": \"Whether the attachments should be processed with OCR\"}, \"reasoning\": {\"type\": \"string\", \"description\": \"Explanation of the decision\"}, \"userIntent\": {\"type\": \"string\", \"description\": \"What the user actually wants to do\"}}, \"required\": [\"shouldProcessAttachments\", \"reasoning\", \"userIntent\"]}"
+      },
+      "id": "91c20751-6a06-4c8d-acba-aa7abfdcce2c",
+      "name": "Message Understanding Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        4144,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "id-1",
+              "leftValue": "={{ $json.shouldProcessAttachments }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d87a3923-9fc3-4768-9a66-fbe9417a1e70",
+      "name": "Should Process Attachments?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        4352,
+        -96
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "message",
+              "value": "={{ $('Normalize Input').item.json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "sessionId",
+              "value": "={{ $('Normalize Input').item.json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "token",
+              "value": "={{ $('Normalize Input').item.json.token }}",
+              "type": "string"
+            },
+            {
+              "id": "id-4",
+              "name": "userIntent",
+              "value": "={{ $json.userIntent }}",
+              "type": "string"
+            },
+            {
+              "id": "id-5",
+              "name": "reasoning",
+              "value": "={{ $json.reasoning }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ff6f9ca9-f66b-429a-94c9-beb9e6316e37",
+      "name": "Skip Attachments - Prepare for Intent",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4576,
+        -96
+      ]
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        1456
+      ],
+      "id": "9ed4795e-a168-4367-8ac2-27eba4db552f",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "x2vRwoUOuzZLZroc",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        816
+      ],
+      "id": "d857ec4c-e5da-432c-a078-07eb76ca932d",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "DXcCfA8BqcmT0od8",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        2992,
+        1488
+      ],
+      "id": "9a4fbfac-1aca-4969-87e6-656722d8923d",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "x2vRwoUOuzZLZroc",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "stepfun/step-3.5-flash:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        2176,
+        1712
+      ],
+      "id": "2e57c128-d110-468c-8fc5-29e65e6ceab4",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "UsBFG5Eebw1nqOiZ",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "moonshotai/kimi-k2-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1952,
+        1104
+      ],
+      "id": "52cfa5fa-84a9-409e-9c99-009ec94884c4",
+      "name": "Groq Chat Model2",
+      "credentials": {
+        "groqApi": {
+          "id": "x2vRwoUOuzZLZroc",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        3856,
+        112
+      ],
+      "id": "e55777ca-f95c-4c7f-bb7c-176e6084865e",
+      "name": "Groq Chat Model3",
+      "credentials": {
+        "groqApi": {
+          "id": "x2vRwoUOuzZLZroc",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3-next-80b-a3b-instruct:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1648,
+        800
+      ],
+      "id": "5f3c07b6-470d-440f-9f61-8901bd0820ff",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "UsBFG5Eebw1nqOiZ",
+          "name": "OpenRouter account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "dev-account-100.app.n8n.cloud",
+            "user-agent": "axios/1.12.0",
+            "content-length": "170",
+            "accept": "application/json,text/html,application/xhtml+xml,application/xml,text/*;q=0.9, image/*;q=0.8, */*;q=0.7",
+            "accept-encoding": "gzip, br",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "20.79.32.40",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "DE",
+            "cf-ray": "9d122f0453aca034-FRA",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "application/json",
+            "x-forwarded-for": "20.79.32.40, 162.158.111.164",
+            "x-forwarded-host": "dev-account-100.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-gwc-110-ff8dc485b-wpft8",
+            "x-is-trusted": "yes",
+            "x-real-ip": "20.79.32.40"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "sessionId": "6890354910",
+            "token": "e61d2d435537dec7e7d5700ede20642d463bfbcece2e591732fff4c5372ebf4b",
+            "action": "sandMessage",
+            "message": "ايش اخر مستند عندك"
+          },
+          "webhookUrl": "https://dev-account-100.app.n8n.cloud/webhook/prossFlow",
+          "executionMode": "production"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "Check Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Token": {
+      "main": [
+        [
+          {
+            "node": "Check for Attachments",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Response - No Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Attachments": {
+      "main": [
+        [
+          {
+            "node": "Message Understanding Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Intent Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model - Intent Agent": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Intent Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Intent Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conversation Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Intent Agent",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "General QA Agent",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Response Agent",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Message Understanding Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Intent Agent": {
+      "main": [
+        [
+          {
+            "node": "Route by Intent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OCR Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "OCR Tool",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OCR Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Execution Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search API Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Execution Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Document API Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Execution Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Document API Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Execution Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Report Generator Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Execution Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model - Execution Agent": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Route by Intent": {
+      "main": [
+        [
+          {
+            "node": "General QA Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execution Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execution Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execution Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execution Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execution Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Response Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Error Response - Out of Scope",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model - General QA": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "General QA Agent": {
+      "main": [
+        [
+          {
+            "node": "Response Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execution Agent": {
+      "main": [
+        [
+          {
+            "node": "Response Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model - Response Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Response Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Response Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response Agent": {
+      "main": [
+        [
+          {
+            "node": "Format Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Final Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Response - No Token": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Attachments": {
+      "main": [
+        [
+          {
+            "node": "Route by File Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by File Type": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Vision OCR",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract Text from Documents",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge Processed Files",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Error - Unsupported File Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Vision OCR": {
+      "main": [
+        [
+          {
+            "node": "Prepare OCR Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Text from Documents": {
+      "main": [
+        [
+          {
+            "node": "Merge Processed Files",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Prepare OCR Results": {
+      "main": [
+        [
+          {
+            "node": "Merge Processed Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Processed Files": {
+      "main": [
+        [
+          {
+            "node": "Intent Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Response - Out of Scope": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Document API Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Execution Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message Understanding Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Message Understanding Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message Understanding Agent": {
+      "main": [
+        [
+          {
+            "node": "Should Process Attachments?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Should Process Attachments?": {
+      "main": [
+        [
+          {
+            "node": "Split Attachments",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skip Attachments - Prepare for Intent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skip Attachments - Prepare for Intent": {
+      "main": [
+        [
+          {
+            "node": "Intent Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Intent Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "General QA Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "OCR Tool",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Message Understanding Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Execution Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "228bfb9d-9115-4c71-b3cd-54714fc82617",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "68ea6fa7f9551640ad2986f8c36c871843b63aa50b4f17447e6fdb8712ecab3c"
+  },
+  "id": "mECn9NIuiO76Nvkh",
+  "tags": []
+}

@@ -1,0 +1,613 @@
+{
+  "name": "DocumentIO OnChat Gateway",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "documentio-onchat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "Webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const body = $json.body ?? $json;\nconst item = Array.isArray(body) ? body[0] : body;\nconst sessionId = item.sessionId || item.session_id || item.chat_id || '';\nconst message = (item.chatInput || item.message || '').toString().trim();\nreturn [{ json: { sessionId, message } }];"
+      },
+      "id": "Normalize",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [
+        420,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const data = this.getWorkflowStaticData('global');\nconst sessionId = $json.sessionId;\nconst token = data.tokens && sessionId ? data.tokens[sessionId] : null;\nreturn [{ json: { ...$json, token } }];"
+      },
+      "id": "GetToken",
+      "name": "Get Token",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [
+        640,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.token}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "HasToken",
+      "name": "Has Token?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        860,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.message}}",
+              "operation": "regex",
+              "value2": "^[a-fA-F0-9]{64}$"
+            }
+          ]
+        }
+      },
+      "id": "LooksLikeToken",
+      "name": "Looks Like Token?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1080,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost/doc/api/validate-token.php",
+        "method": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "={\"Authorization\":\"Bearer {{$json.message}}\",\"Content-Type\":\"application/json\"}"
+      },
+      "id": "ValidateToken",
+      "name": "Validate Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1300,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const data = this.getWorkflowStaticData('global');\nif (!data.tokens) data.tokens = {};\nconst ok = $json.status === 'success';\nconst sessionId = $node['Normalize Input'].json.sessionId;\nconst token = $node['Normalize Input'].json.message;\nif (ok && sessionId && token) {\n  data.tokens[sessionId] = token;\n}\nreturn [{ json: { ok } }];"
+      },
+      "id": "StoreToken",
+      "name": "Store Token",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "if ($json.ok) {\n  return [{ json: { reply: 'تم التحقق من التوكن وحفظه. يمكنك الآن طلب البحث أو الحذف أو التعديل أو الجلب.' } }];\n}\nreturn [{ json: { reply: 'التوكن غير صحيح. الرجاء إدخال التوكن الصحيح.' } }];"
+      },
+      "id": "TokenReply",
+      "name": "Token Reply",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [
+        1740,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const help = \"مرحباً! للوصول للخدمة أرسل التوكن الخاص بك.\\nإذا لا تملك توكن: ادخل حسابك في الموقع ثم من البروفايل اضغط إعادة توليد التوكن وسيصلك بالإيميل.\";\nreturn [{ json: { reply: help } }];"
+      },
+      "id": "AskToken",
+      "name": "Ask Token",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [
+        1300,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const text = $json.message || '';\nlet type = 'general';\nlet params = {};\nif (/(بحث|ابحث|search)/i.test(text)) {\n  type = 'search';\n  params.q = text.replace(/(بحث|ابحث|search)/i, '').trim();\n}\nif (/(حذف|delete)/i.test(text)) {\n  type = 'delete';\n  const m = text.match(/\\b(\\d+)\\b/);\n  params.id = m ? m[1] : '';\n}\nif (/(عرض|جلب|قائمة|list|get)/i.test(text)) {\n  type = 'list';\n}\nif (/(تعديل|update)/i.test(text)) {\n  type = 'update';\n}\nif (/(انشاء|إنشاء|اضافة|إضافة|create)/i.test(text)) {\n  type = 'create';\n}\nreturn [{ json: { ...$json, type, params } }];"
+      },
+      "id": "Classify",
+      "name": "Classify",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [
+        1080,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "value1": "={{$json.type}}",
+        "rules": [
+          {
+            "operation": "equal",
+            "value2": "search"
+          },
+          {
+            "operation": "equal",
+            "value2": "delete"
+          },
+          {
+            "operation": "equal",
+            "value2": "list"
+          },
+          {
+            "operation": "equal",
+            "value2": "create"
+          },
+          {
+            "operation": "equal",
+            "value2": "update"
+          }
+        ]
+      },
+      "id": "Switch",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 2,
+      "position": [
+        1300,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost/doc/api/document_search.php",
+        "method": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "={\"Authorization\":\"Bearer {{$json.token}}\",\"Content-Type\":\"application/json\"}",
+        "bodyParametersJson": "={\"q\":\"{{$json.params.q}}\"}"
+      },
+      "id": "Search",
+      "name": "Search",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1520,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const docs = $json.document || [];\nlet reply = 'لم يتم العثور على نتائج.';\nif (docs.length > 0) {\n  reply = `تم العثور على ${docs.length} نتيجة.\\n`;\n  const top = docs.slice(0, 3).map(d => `- ${d.customer_name || ''} (${d.national_number || ''})`);\n  reply += top.join('\\n');\n}\nreturn [{ json: { reply } }];"
+      },
+      "id": "SearchReply",
+      "name": "Search Reply",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [
+        1740,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost/doc/api/document_delete.php",
+        "method": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "={\"Authorization\":\"Bearer {{$json.token}}\",\"Content-Type\":\"application/json\"}",
+        "bodyParametersJson": "={\"id\":\"{{$json.params.id}}\"}"
+      },
+      "id": "Delete",
+      "name": "Delete",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1520,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const reply = $json.message || 'تم تنفيذ الطلب.';\nreturn [{ json: { reply } }];"
+      },
+      "id": "DeleteReply",
+      "name": "Delete Reply",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [
+        1740,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost/doc/api/get_documents.php",
+        "method": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "={\"Authorization\":\"Bearer {{$json.token}}\",\"Content-Type\":\"application/json\"}"
+      },
+      "id": "List",
+      "name": "List",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1520,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const docs = $json.document || [];\nlet reply = 'لا توجد مستندات.';\nif (docs.length > 0) {\n  reply = `عدد المستندات: ${docs.length}.\\n`;\n  const top = docs.slice(0, 5).map(d => `- ${d.customer_name || ''} (${d.national_number || ''})`);\n  reply += top.join('\\n');\n}\nreturn [{ json: { reply } }];"
+      },
+      "id": "ListReply",
+      "name": "List Reply",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [
+        1740,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const reply = 'لإنشاء مستند جديد أرسل البيانات بهذا الشكل:\\nاسم العميل: ...\\nالرقم الوطني: ...\\nالهاتف: ...\\nالجواز: ...\\nالتواصل: ...\\nالسعر: ...\\n(اختياري) ملاحظات: ...';\nreturn [{ json: { reply } }];"
+      },
+      "id": "CreateHelp",
+      "name": "Create Help",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const reply = 'للتعديل أرسل البيانات بهذا الشكل مع رقم المستند:\\nID: ...\\nاسم العميل: ...\\nالرقم الوطني: ...\\nالهاتف: ...\\nالجواز: ...\\nالتواصل: ...\\nالسعر: ...';\nreturn [{ json: { reply } }];"
+      },
+      "id": "UpdateHelp",
+      "name": "Update Help",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const reply = 'أنا مساعد خاص بالنظام. أقدر أساعدك في: البحث، الجلب، الحذف، التعديل، الإنشاء.\\nاكتب مثلاً: بحث محمد أو حذف 123.';\nreturn [{ json: { reply } }];"
+      },
+      "id": "GeneralReply",
+      "name": "General Reply",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "responseBody": "={{[{\"sessionId\": $node[\"Normalize Input\"].json.sessionId, \"action\": \"sendMessage\", \"chatInput\": $json.reply}]}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "Respond",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1960,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "Get Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Token": {
+      "main": [
+        [
+          {
+            "node": "Has Token?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Token?": {
+      "main": [
+        [
+          {
+            "node": "Classify",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Looks Like Token?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Looks Like Token?": {
+      "main": [
+        [
+          {
+            "node": "Validate Token",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ask Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Token": {
+      "main": [
+        [
+          {
+            "node": "Store Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Token": {
+      "main": [
+        [
+          {
+            "node": "Token Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Token Reply": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ask Token": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Search",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "List",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Help",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Help",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "General Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search": {
+      "main": [
+        [
+          {
+            "node": "Search Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Reply": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete": {
+      "main": [
+        [
+          {
+            "node": "Delete Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Reply": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List": {
+      "main": [
+        [
+          {
+            "node": "List Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Reply": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Help": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Help": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "General Reply": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1"
+}

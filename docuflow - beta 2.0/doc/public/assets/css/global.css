@@ -1,0 +1,287 @@
+:root {
+  /* ==========================================================================
+     COLOR SYSTEM - Design Tokens
+     ========================================================================== */
+
+  /* --- Base Colors --- */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-50: #f8fafc;
+  --color-gray-100: #f1f5f9;
+  --color-gray-200: #e2e8f0;
+  --color-gray-300: #cbd5e1;
+  --color-gray-400: #94a3b8;
+  --color-gray-500: #64748b;
+  --color-gray-600: #475569;
+  --color-gray-700: #334155;
+  --color-gray-800: #1e293b;
+  --color-gray-900: #0f172a;
+
+  /* --- Brand Colors --- */
+  --brand-primary: #1e40af;
+  --brand-primary-hover: #1e3a8a;
+  --brand-accent: #2563eb;
+  --brand-accent-hover: #1d4ed8;
+
+  /* --- Semantic Colors --- */
+  --success-base: #16a34a;
+  --success-hover: #15803d;
+  --warning-base: #d97706;
+  --warning-hover: #b45309;
+  --error-base: #dc2626;
+  --error-hover: #b91c1c;
+  --info-base: #2563eb;
+  --info-hover: #1d4ed8;
+
+  /* ==========================================================================
+     SEMANTIC TOKENS - Usage Specific
+     ========================================================================== */
+
+  /* --- Backgrounds --- */
+  --bg-page: var(--color-gray-50);
+  --bg-card: var(--color-white);
+  --bg-input: var(--color-gray-100);
+  --bg-overlay: rgba(15, 23, 42, 0.35);
+  --bg-hover: var(--color-gray-100);
+  --bg-active: var(--color-gray-200);
+
+  /* --- Text Colors --- */
+  --text-primary: var(--color-gray-900);
+  --text-secondary: var(--color-gray-600);
+  --text-muted: var(--color-gray-500);
+  --text-inverse: var(--color-white);
+
+  /* --- Border Colors --- */
+  --border-light: var(--color-gray-200);
+  --border-base: var(--color-gray-300);
+  --border-focus: var(--brand-accent);
+  --border-error: var(--error-base);
+
+  /* --- Interactive States --- */
+  --primary: var(--brand-accent);
+  --primary-hover: var(--brand-accent-hover);
+  --secondary: var(--color-gray-200);
+  --secondary-hover: var(--color-gray-300);
+
+  /* --- Shadows & Effects --- */
+  --shadow-xs: 0 1px 2px #0000000d;
+  --shadow-sm: 0 1px 3px #0000001a, 0 1px 2px hsla(0, 0%, 0%, 0.06);
+  --shadow-md: 0 4px 6px #0000001a, 0 2px 4px #0000000f;
+  --shadow-lg: 0 10px 15px #0000001a, 0 4px 6px #0000000d;
+  --shadow-focus: 0 0 0 3px #2563eb1a;
+
+  /* --- Typography for Dark Theme --- */
+  --font-primary-dark: "Inter", var(--font-primary);
+  --font-secondary-dark: var(--font-secondary);
+  --font-system-dark: var(--font-system);
+  --font-mono-dark: var(--font-mono);
+  --font-display-dark: var(--font-display);
+
+  /* --- Typography --- */
+  /* Font Families */
+  --font-primary: "Times New Roman", Times, serif;
+  --font-secondary: "TikTok Sans", sans-serif;
+  --font-system: system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-mono: "Courier New", Courier, monospace;
+  --font-display: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem; /* 36px */
+  --text-5xl: 3rem; /* 48px */
+
+  /* Font Weights */
+  --font-thin: 100;
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+  --font-black: 900;
+
+  /* Line Heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  /* --- Motion --- */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* ==========================================================================
+   UTILITY CLASSES - Typography
+   ========================================================================== */
+
+/* Font Families */
+.font-primary {
+  font-family: var(--font-primary);
+}
+.font-secondary {
+  font-family: var(--font-secondary);
+}
+.font-system {
+  font-family: var(--font-system);
+}
+.font-mono {
+  font-family: var(--font-mono);
+}
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Font Sizes */
+.text-xs {
+  font-size: var(--text-xs);
+}
+.text-sm {
+  font-size: var(--text-sm);
+}
+.text-base {
+  font-size: var(--text-base);
+}
+.text-lg {
+  font-size: var(--text-lg);
+}
+.text-xl {
+  font-size: var(--text-xl);
+}
+.text-2xl {
+  font-size: var(--text-2xl);
+}
+.text-3xl {
+  font-size: var(--text-3xl);
+}
+.text-4xl {
+  font-size: var(--text-4xl);
+}
+.text-5xl {
+  font-size: var(--text-5xl);
+}
+
+/* Font Weights */
+.font-thin {
+  font-weight: var(--font-thin);
+}
+.font-light {
+  font-weight: var(--font-light);
+}
+.font-normal {
+  font-weight: var(--font-normal);
+}
+.font-medium {
+  font-weight: var(--font-medium);
+}
+.font-semibold {
+  font-weight: var(--font-semibold);
+}
+.font-bold {
+  font-weight: var(--font-bold);
+}
+.font-extrabold {
+  font-weight: var(--font-extrabold);
+}
+.font-black {
+  font-weight: var(--font-black);
+}
+
+/* Line Heights */
+.leading-none {
+  line-height: var(--leading-none);
+}
+.leading-tight {
+  line-height: var(--leading-tight);
+}
+.leading-snug {
+  line-height: var(--leading-snug);
+}
+.leading-normal {
+  line-height: var(--leading-normal);
+}
+.leading-relaxed {
+  line-height: var(--leading-relaxed);
+}
+.leading-loose {
+  line-height: var(--leading-loose);
+}
+
+/* ==========================================================================
+   DARK THEME UTILITY CLASSES
+   ========================================================================== */
+
+[data-theme="dark"] .font-primary {
+  font-family: var(--font-primary-dark);
+  font-weight: var(--font-light); /* Lighter weight for dark backgrounds */
+}
+
+[data-theme="dark"] .font-secondary {
+  font-family: var(--font-secondary-dark);
+}
+
+[data-theme="dark"] .font-system {
+  font-family: var(--font-system-dark);
+}
+
+[data-theme="dark"] .font-mono {
+  font-family: var(--font-mono-dark);
+}
+
+[data-theme="dark"] .font-display {
+  font-family: var(--font-display-dark);
+  font-weight: var(--font-light); /* Better readability on dark */
+}
+
+/* ==========================================================================
+   DARK THEME
+   ========================================================================== */
+[data-theme="dark"] {
+  /* --- Backgrounds --- */
+  --bg-page: #0b1220;
+  --bg-card: #111827;
+  --bg-input: #020617;
+  --bg-overlay: #02061799;
+  --bg-hover: #1e293b;
+  --bg-active: #334155;
+
+  /* --- Text Colors --- */
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --text-inverse: #111827;
+
+  /* --- Border Colors --- */
+  --border-light: #1f2937;
+  --border-base: #374151;
+  --border-focus: #3b82f6;
+  --border-error: #ef4444;
+
+  /* --- Interactive States --- */
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --secondary: #374151;
+  --secondary-hover: #4b5563;
+
+  /* --- Shadows --- */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4), 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-focus: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
